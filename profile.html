@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="er" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="profilestyles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="profile-container">
+         <a href="main.html" style="text-decoration: none;">
+        <button class="back-btn" aria-label="Return">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+         </a>
+
+        <div class="header-frame frame-one">
+            <div class="profile-info">
+                <div class="profile-icon" id="profile-icon"></div> 
+                <div class="user-details">
+                    <span class="username" id="username-display">gest</span> 
+                    <div class="subscribers">Subscribers <span>0</span></div>
+                </div>
+            </div>
+            <button class="add-btn" aria-label="Upload Photo" id="upload-btn">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <input type="file" id="file-input" accept="image/*" style="display: none;">
+
+        <div class="main-content-area"> 
+            <div class="content-frame frame-two">
+                <p class="placeholder-text" id="status-message">محتوى البروفايل القابل للتمرير...</p>
+                </div>
+            
+            <div class="footer-buttons">
+                <button class="footer-btn friends-btn">
+                    <i class="fas fa-users"></i>
+                    <span>Friands</span>
+                </button>
+                <button class="footer-btn achievements-btn">
+                    <i class="fas fa-trophy"></i>
+                    <span>Achievements</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ****************************************************
+    // إعدادات Cloudinary - يجب استبدالها بقيمك الحقيقية
+    // ****************************************************
+    const CLOUDINARY_CLOUD_NAME = "dsvxv96q8"; // <=== استبدلها باسم سحابتك
+    const CLOUDINARY_UPLOAD_PRESET = "DivGame"; // <=== استبدلها بـ Upload Preset غير الموقع
+
+    // مفاتيح localStorage
+    const USER_NAME_KEY = 'game_user_name';
+    const PROFILE_PIC_URL_KEY = 'game_profile_pic_url';
+
+    // ****************************************************
+    // منطق تحديث الواجهة عند تحميل الصفحة
+    // ****************************************************
+    document.addEventListener('DOMContentLoaded', () => {
+        const usernameElement = document.getElementById('username-display');
+        const profileIcon = document.getElementById('profile-icon');
+        const fileInput = document.getElementById('file-input');
+        const uploadBtn = document.getElementById('upload-btn');
+        
+        // 1. تحديث اسم المستخدم من localStorage
+        const savedUsername = localStorage.getItem(USER_NAME_KEY); 
+        if (usernameElement) {
+            usernameElement.textContent = savedUsername || 'Guest User'; 
+        }
+
+        // 2. تحديث صورة البروفايل من localStorage
+        const savedPicUrl = localStorage.getItem(PROFILE_PIC_URL_KEY);
+        if (profileIcon && savedPicUrl) {
+             profileIcon.style.backgroundImage = `url('${savedPicUrl}')`;
+             profileIcon.style.backgroundSize = 'cover';
+             profileIcon.style.backgroundPosition = 'center';
+             profileIcon.style.backgroundColor = 'transparent'; // إزالة الخلفية الرمادية الافتراضية
+        }
+
+        // 3. ربط زر الإضافة بمدخل الملف المخفي
+        uploadBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // 4. معالجة اختيار الملف لبدء الرفع
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                uploadImageToCloudinary(file);
+            }
+        });
+    });
+
+    // ****************************************************
+    // 5. دالة الرفع إلى Cloudinary
+    // ****************************************************
+    function uploadImageToCloudinary(file) {
+        const statusMessage = document.getElementById('status-message');
+        statusMessage.textContent = 'جاري رفع الصورة... يرجى الانتظار.';
+        
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+        fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('فشل الرفع إلى Cloudinary.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const imageUrl = data.secure_url;
+            
+            // حفظ الرابط الجديد في localStorage
+            localStorage.setItem(PROFILE_PIC_URL_KEY, imageUrl); 
+
+            // تحديث الواجهة لعرض الصورة الجديدة
+            const profileIcon = document.getElementById('profile-icon');
+            profileIcon.style.backgroundImage = `url('${imageUrl}')`;
+            profileIcon.style.backgroundSize = 'cover';
+            profileIcon.style.backgroundPosition = 'center';
+            profileIcon.style.backgroundColor = 'transparent';
+            
+            statusMessage.textContent = 'تم تحديث صورة البروفايل بنجاح! 🎉';
+            // يمكنك هنا إرسال الرابط إلى قاعدة بيانات Firebase أو أي قاعدة بيانات أخرى
+        })
+        .catch(error => {
+            console.error('Upload Error:', error);
+            statusMessage.textContent = `فشل الرفع: ${error.message}`;
+        });
+    }
+
+
+    // ****************************************************
+    // (باقي الأكواد السابقة)
+    // ****************************************************
+    document.addEventListener('contextmenu', function(e){
+        e.preventDefault();
+    });
+
+    document.addEventListener('dragstart', function(e){
+        if (e.target.tagName == 'IMG'){
+            e.preventDefault();
+        }
+    });
+    </script>
+</body>
+</html>

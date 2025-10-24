@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stage Select</title>
+    <link rel="stylesheet" href="stageselectstyle.css"> 
+</head>
+<body>
+
+    <div class="header-banner">
+        <div class="overlay"></div>
+
+            <a href="main.html" style="text-decoration: none;">
+            <button class="menu-btn">Return</button>
+            </a>
+        
+
+        <div class="main-content">
+            <h1 class="title-large">DUEL CHANNEL <span class="highlight">DUELROOM</span></h1>
+            <div class="event-chooser">
+                <p>Choose Event</p>
+            </div>
+            <button class="choose-mode-btn">
+                <span class="icon-plus">+</span>
+                <span>Choose a mode to duel</span>
+            </button>
+        </div>
+        
+        <div class="side-buttons">
+            <div class="circle-btn red"></div>
+            <div class="circle-btn green"></div>
+            <div class="circle-btn blue"></div>
+            </div>
+    </div>
+
+    <div class="recommended-section">
+        <h2 class="section-title">
+            <span class="fire-icon">🔥</span>
+            RECOMMENDED
+        </h2>
+        
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-overlay">
+                    <span class="fire-icon small">🔥</span>
+                    <span class="label" style="padding-right: 30px;">Victorious Guessers</span>
+                    <p class="card-title">Guess Royale</p>
+                    <div class="details">
+                        <span class="icon-person">👥</span> 30 Player
+                        <span class="icon-skull">💀</span> LASTSTANDING
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-2">
+                <div class="card-overlay-2">
+                    <span class="fire-icon small">🔥</span>
+                    <span class="label" style="padding-right: 30px;">PvP</span>
+                    <p class="card-title">Gift Contest</p>
+                    <span class="no-scores">Event</span>
+                </div>
+            </div>
+
+            <div class="card-3">
+                <div class="card-overlay-3">
+                    <span class="fire-icon small">🔥</span>
+                    <span class="label" style="padding-right: 30px;">Stacked Gifts</span>
+                    <p class="card-title">Solo Entertainment</p>
+                    <div class="details">
+                        <span class="icon-mic">👥</span>Play Solo
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="floating-mode-btn">
+            Choose Mode
+        </div>
+    </div>
+    
+</body>
+
+<script>
+    document.addEventListener('contextmenu', function(e){
+        e.preventDefault();
+    });
+
+    document.addEventListener('dragstart', function(e){
+        if (e.target.tagName == 'IMG'){
+            e.preventDefault();
+        }
+    });
+</script>
+
+</html>
+

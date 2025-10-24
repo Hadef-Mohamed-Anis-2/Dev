@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    
+    <style>
+        /* (*** كود CSS السابق يبقى كما هو دون تغيير ***) */
+
+        /* إعادة تعيين الأساسيات والتخطيط العام */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+
+        /* الألوان الرئيسية */
+        :root {
+            --color-bg-dark: #2c2929;      
+            --color-element-dark: #3a3a3a;  
+            --color-primary-yellow: #ffc90e; /* الأصفر الساطع */
+            --color-google: #dd4b39;       
+            --color-facebook: #3b5998;     
+            --color-text-light: #f0f0f0;   
+            --color-logout-red: #880000;  /* أحمر داكن لتسجيل الخروج */
+            --border-style: 3px solid #ffc90e; 
+        }
+
+        body {
+            /* تأثير الخلفية الورقية */
+            background-color: var(--color-bg-dark);
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.05) 0,
+                rgba(0, 0, 0, 0.05) 1px,
+                transparent 1px,
+                transparent 5px
+            ),
+            linear-gradient(to top, #303030, #181818);
+            
+            color: var(--color-text-light);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: right; 
+            opacity: 0; 
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* حاوية صندوق تسجيل الدخول - لوحة معلومات اللعبة */
+        .login-box {
+            width: 90%;
+            max-width: 400px;
+            background: var(--color-element-dark);
+            padding: 30px 25px;
+            border: var(--border-style);
+            border-radius: 0;
+            box-shadow: 0 0 20px rgba(255, 201, 14, 0.6);
+            text-align: center;
+            direction: rtl; 
+        }
+
+        .login-box h2 {
+            color: var(--color-primary-yellow);
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(255, 201, 14, 0.5);
+        }
+        
+        .login-box p {
+            color: #ccc;
+            margin-bottom: 40px;
+            font-size: 0.9em;
+        }
+        
+        /* مجموعة أزرار تسجيل الدخول الاجتماعي */
+        .social-login-group {
+            display: flex;
+            flex-direction: column; 
+            gap: 20px; 
+        }
+        
+        /* مجموعة بدء اللعبة وتسجيل الخروج */
+        .start-logout-group {
+            display: flex;
+            flex-direction: column; 
+            gap: 15px;
+        }
+        
+        /* تصميم الأزرار التقنية (Login Buttons) */
+        .login-btn {
+            padding: 18px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s, box-shadow 0.3s;
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 10px rgba(255, 201, 14, 0.4);
+        }
+
+        .login-btn:active {
+            opacity: 0.7;
+        }
+        
+        /* أيقونة اللعبة المصغرة (Simulated Icon) */
+        .btn-icon {
+            width: 25px;
+            height: 25px;
+            margin-inline-end: 15px; 
+            border-radius: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: 900;
+        }
+        
+        /* تخصيص زر Google */
+        .google-btn {
+            background: var(--color-element-dark);
+            color: var(--color-text-light);
+            border: 2px solid var(--color-google);
+        }
+
+        .google-btn .btn-icon { background-color: var(--color-google); color: var(--color-text-light); }
+        
+        /* تخصيص زر Facebook */
+        .facebook-btn {
+            background: var(--color-element-dark);
+            color: var(--color-text-light);
+            border: 2px solid var(--color-facebook);
+        }
+
+        .facebook-btn .btn-icon { background-color: var(--color-facebook); color: var(--color-text-light); }
+        
+        /* تخصيص زر بدء اللعبة (الأصفر الرئيسي) */
+        .start-btn-game {
+            background: var(--color-element-dark);
+            color: var(--color-primary-yellow);
+            border: 3px solid var(--color-primary-yellow);
+            padding: 20px; /* أكبر حجماً */
+            box-shadow: 0 0 15px rgba(255, 201, 14, 0.8);
+        }
+        .start-btn-game:hover {
+            box-shadow: 0 0 25px rgba(255, 201, 14, 1);
+        }
+        .start-btn-game .btn-icon { background-color: var(--color-primary-yellow); color: var(--color-element-dark); }
+
+
+        /* تخصيص زر تسجيل الخروج (الأحمر الثانوي) */
+        .logout-btn-game {
+            background: var(--color-element-dark);
+            color: var(--color-text-light);
+            border: 2px solid var(--color-logout-red);
+            font-size: 0.9em;
+        }
+        .logout-btn-game .btn-icon { background-color: var(--color-logout-red); color: var(--color-text-light); }
+        
+        /* لمسة نهائية: خط فاصل */
+        .divider {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #888;
+            font-size: 0.8em;
+        }
+        
+        /* تحديد موقع نص الأيقونة */
+        .icon-text {
+            font-size: 1.2em;
+            line-height: 1;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>تسجيل الدخول</h2>
+        <p>المصادقة مطلوبة للوصول إلى النظام.</p>
+        
+        <div class="social-login-group" id="social-login-group">
+            <button class="login-btn google-btn" id="google-login">
+                <div class="btn-icon"><span class="icon-text">G</span></div>
+                <span>اتصال عبر بروتوكول غوغل</span>
+            </button>
+            <button class="login-btn facebook-btn" id="facebook-login">
+                <div class="btn-icon"><span class="icon-text">F</span></div>
+                <span>اتصال عبر شبكة فيسبوك</span>
+            </button>
+        </div>
+        
+        <div class="start-logout-group" id="start-logout-group" style="display: none;">
+            <button class="login-btn start-btn-game" id="start-game">
+                
+                <span>بدء اللعبة</span>
+            </button>
+            <button class="login-btn logout-btn-game" id="logout-user">
+                
+                <span>تسجيل الخروج</span>
+            </button>
+        </div>
+
+        <div class="divider">
+            [ تحذير: سيتم تسجيل أي محاولة وصول غير مصرح بها ]
+            <p id="auth-status" style="margin-top: 10px; color: var(--color-primary-yellow); font-weight: bold;"></p>
+        </div>
+    </div>
+
+    <script>
+        // **********************************************
+        // 1. إعدادات Firebase - يجب تغييرها لقيم مشروعك الفعلي
+        // **********************************************
+        const firebaseConfig = {
+  apiKey: "AIzaSyChvtHVmDn-jGkPCUgeyTOWF1GwwC5Se7g",
+  authDomain: "devgame-69208.firebaseapp.com",
+  projectId: "devgame-69208",
+  storageBucket: "devgame-69208.firebasestorage.app",
+  messagingSenderId: "359568777421",
+  appId: "1:359568777421:web:0c30c804aa0ffe95608984",
+  measurementId: "G-D6YELCJ51C"
+};
+
+        // تهيئة Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // عناصر الواجهة
+        const socialGroup = document.getElementById('social-login-group');
+        const startLogoutGroup = document.getElementById('start-logout-group');
+        const authStatus = document.getElementById('auth-status');
+        const startGameButton = document.getElementById('start-game');
+        const logoutButton = document.getElementById('logout-user');
+        
+        // **********************************************
+        // 2. دوال مساعدة لحفظ وتفريغ بيانات المستخدم
+        // **********************************************
+
+        /** حفظ اسم وإيميل المستخدم في localStorage */
+        function saveUserData(user) {
+            if (user) {
+                // حفظ البيانات. نستخدم '||' لتوفير قيمة احتياطية في حالة عدم توفر الاسم.
+                localStorage.setItem('game_user_name', user.displayName || 'لاعب غير معروف');
+                localStorage.setItem('game_user_email', user.email || 'غير متوفر');
+                console.log("User data saved to localStorage.");
+            }
+        }
+
+        /** تفريغ بيانات المستخدم من localStorage */
+        function clearUserData() {
+            localStorage.removeItem('game_user_name');
+            localStorage.removeItem('game_user_email');
+            console.log("User data cleared from localStorage.");
+        }
+
+        // **********************************************
+        // 3. دالة تحديث الواجهة (المنطق الأساسي)
+        // **********************************************
+        function updateUI(user) {
+            if (user) {
+                // المستخدم مسجل دخوله (سواء الآن أو مسبقًا)
+                socialGroup.style.display = 'none';
+                startLogoutGroup.style.display = 'flex'; // إظهار زر البدء والخروج
+                authStatus.innerText = `تمت المصادقة بنجاح. مرحباً بك، ${user.displayName || user.email}.`;
+            } else {
+                // المستخدم غير مسجل دخوله (أو قام بتسجيل الخروج)
+                socialGroup.style.display = 'flex'; // إظهار أزرار المصادقة الاجتماعية
+                startLogoutGroup.style.display = 'none';
+                authStatus.innerText = 'المصادقة مطلوبة للوصول إلى النظام.';
+            }
+        }
+        
+        // **********************************************
+        // 4. مراقبة حالة المصادقة (تمنع تسجيل الدخول التلقائي)
+        // **********************************************
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // إذا وجدنا جلسة محفوظة، قم بتحديث الواجهة وحفظ البيانات
+                saveUserData(user); 
+            } else {
+                // إذا لم نجد جلسة، قم بتنظيف أي بيانات قديمة
+                clearUserData();
+            }
+            // في كلتا الحالتين، قم بتحديث الواجهة لعرض زر البدء أو أزرار المصادقة
+            updateUI(user);
+        });
+        
+        // **********************************************
+        // 5. دوال تسجيل الدخول الفعلي
+        // **********************************************
+
+        function handleSignIn(provider) {
+             auth.signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    // saveUserData(user) سيتم استدعاؤها عبر onAuthStateChanged لاحقًا، لكن لا ضرر من استدعائها مباشرة
+                    saveUserData(user); 
+                    authStatus.innerText = `تم الاتصال بنجاح! مرحباً، ${user.displayName || user.email}.`;
+                })
+                .catch((error) => {
+                    authStatus.innerText = `خطأ في الاتصال: ${error.message}`;
+                    console.error("Auth Error:", error);
+                    updateUI(null);
+                });
+        }
+        
+        // ربط دوال المصادقة بالأزرار
+        document.getElementById('google-login').addEventListener('click', () => {
+             const provider = new firebase.auth.GoogleAuthProvider();
+             handleSignIn(provider);
+        });
+        document.getElementById('facebook-login').addEventListener('click', () => {
+             const provider = new firebase.auth.FacebookAuthProvider();
+             handleSignIn(provider);
+        });
+
+        // **********************************************
+        // 6. دالة زر تسجيل الخروج
+        // **********************************************
+        logoutButton.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                // عند تسجيل الخروج، يتم تلقائيًا تشغيل onAuthStateChanged الذي بدوره يستدعي clearUserData() و updateUI(null)
+                authStatus.innerText = 'تم تسجيل الخروج بنجاح.';
+            }).catch((error) => {
+                authStatus.innerText = `خطأ في تسجيل الخروج: ${error.message}`;
+            });
+        });
+        
+        // **********************************************
+        // 7. دالة زر بدء اللعبة (التوجيه)
+        // **********************************************
+        startGameButton.addEventListener('click', () => {
+            if (auth.currentUser) {
+                // توجيه المستخدم لصفحة اللعبة/التحميل
+                document.body.style.transition = 'opacity 0.5s ease-in-out';
+                document.body.style.opacity = '0';
+                localStorage.setItem('nextPage' , 'main');
+                setTimeout(() => {
+                    window.location.href = 'loading.html'; // <=== عدّل هذا المسار
+                }, 500);
+            } else {
+                authStatus.innerText = 'انتهت صلاحية الجلسة. يرجى تسجيل الدخول مجدداً.';
+                updateUI(null);
+            }
+        });
+
+
+
+
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
+        
+    document.addEventListener('contextmenu', function(e){
+        e.preventDefault();
+    });
+
+    document.addEventListener('dragstart', function(e){
+        if (e.target.tagName == 'IMG'){
+            e.preventDefault();
+        }
+    });
+        
+        // **********************************************
+        // كيفية الوصول إلى البيانات في صفحة 'loading.html' أو أي صفحة أخرى:
+        // **********************************************
+        /*
+        // في بداية أي صفحة أخرى بعد تسجيل الدخول (مثل loading.html):
+        const userName = localStorage.getItem('game_user_name');
+        const userEmail = localStorage.getItem('game_user_email');
+
+        if (userName && userEmail) {
+            // استخدم البيانات هنا
+            // console.log(`Welcome back, ${userName}!`);
+        } else {
+            // إعادة التوجيه إلى صفحة تسجيل الدخول إذا لم يتم العثور على بيانات
+            // window.location.href = 'login.html'; 
+        }
+        */
+
+    </script>
+</body>
+</html>

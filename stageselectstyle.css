@@ -1,0 +1,349 @@
+
+
+
+
+
+
+
+
+/* الأنماط العامة وإعدادات الخطوط */
+:root {
+    --primary-yellow: #fddb00; /* لون التمييز */
+    --text-color: #ffffff;
+    --dark-bg: #1c1c1c; 
+    --overlay-color: rgba(0, 0, 0, 0.5); /* طبقة شفافة لتعتيم الخلفية */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif; /* يفضل استخدام خط مخصص هنا */
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    direction: rtl; /* اتجاه الكتابة من اليمين لليسار */
+}
+
+/* ========================================= */
+/* 1. قسم الراية الرئيسية (Header Banner) */
+/* ========================================= */
+.header-banner {
+    width: 100%;
+    min-height: 250px; /* ارتفاع أساسي */
+    position: relative;
+    overflow: hidden;
+    /* تعليق: هذا هو المكان لتحديد صورة الخلفية الكبيرة للراية */
+    /* background: url('مسار/صورة/الخلفية.jpg') no-repeat center center/cover; */
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-color);
+}
+
+
+
+.menu-btn {
+    background: #444;
+    color: var(--text-color);
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 10px 20px;
+    display: flex;
+    position: relative;
+    top: 10px;
+    left: -10px;
+}
+
+.menu-btn:hover {
+    background: #555;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.nav-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin-right: 15px;
+    font-size: 14px;
+    z-index: 20;
+}
+
+.live-btn {
+    background-color: red;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.main-content {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    z-index: 5;
+}
+
+.title-large {
+    font-size: 3em; /* حجم كبير لشاشات سطح المكتب */
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.highlight {
+    color: var(--primary-yellow);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 0 5px;
+}
+
+.event-chooser {
+    background-color: var(--primary-yellow);
+    color: black;
+    padding: 5px 10px;
+    display: inline-block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.choose-mode-btn {
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--text-color);
+    border: 1px solid var(--primary-yellow);
+    padding: 10px 20px;
+    margin-top: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.icon-plus {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+/* إخفاء الأزرار الجانبية في الهاتف مبدئياً */
+.side-buttons {
+    display: none; 
+}
+
+
+/* ========================================= */
+/* 2. قسم القنوات الموصى بها (Recommended) */
+/* ========================================= */
+.recommended-section {
+    padding: 20px;
+    position: relative;
+}
+
+.section-title {
+    font-size: 1.2em;
+    font-weight: normal;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.fire-icon {
+    font-size: 1.5em;
+    color: red;
+    margin-left: 5px;
+}
+
+.cards-container {
+    display: flex;
+    gap: 15px; /* المسافة بين البطاقات */
+    overflow-x: auto; /* تفعيل السحب الأفقي للبطاقات على الهاتف */
+    padding-bottom: 10px; /* مسافة للظل في حالة السحب */
+    -webkit-overflow-scrolling: touch; /* تحسين السحب في iOS */
+}
+
+.card {
+    min-width: 250px; /* عرض أدنى ثابت للبطاقة على الهاتف */
+    height: 150px;
+    background-color: #333;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0; /* لمنع تقلص البطاقات عند الحاجة للسحب الأفقي */
+    /* تعليق: هنا يمكنك وضع صورة الخلفية لكل بطاقة */
+    /* background: url('مسار/صورة/البطاقة.jpg') no-repeat center center/cover; */
+    background-image: url(assets/2.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.card-2 {
+    min-width: 250px; /* عرض أدنى ثابت للبطاقة على الهاتف */
+    height: 150px;
+    background-color: #333;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-image: url(assets/4.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.card-3 {
+    min-width: 250px; /* عرض أدنى ثابت للبطاقة على الهاتف */
+    height: 150px;
+    background-color: #333;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-image: url(assets/3.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1));
+}
+
+.card-overlay-2 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1));
+}
+
+.card-overlay-3 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.1));
+}
+
+.card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.label, .details {
+    font-size: 0.8em;
+    color: #ccc;
+}
+
+.fire-icon.small {
+    font-size: 1em;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.no-scores {
+    color: var(--primary-yellow);
+    font-weight: bold;
+    display: block;
+    margin-top: 5px;
+}
+
+/* الزر الجانبي العائم (Choose Mode) - يُظهر كزر عائم أسفل الشاشة على الهاتف */
+.floating-mode-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 200px;
+    height: 55px;
+    background-color: var(--primary-yellow);
+    color: black;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 100; /* للتأكد من ظهوره فوق العناصر الأخرى */
+}
+
+/* ========================================= */
+/* 3. استعلامات الوسائط (MOBILE Responsive) */
+/* ========================================= */
+@media (min-width: 601px) {
+    /* تخصيص تخطيط الأزرار الجانبية للشاشات الأكبر */
+    .side-buttons {
+        display: block;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+    }
+    .floating-mode-btn {
+        /* إخفاء الزر العائم في الشاشات الأكبر لأنه موجود في الشريط الجانبي في الصورة الأصلية */
+        display: none; 
+    }
+}
+
+@media (max-width: 600px) {
+    /* تعديلات خاصة بالهواتف العمودية */
+    
+    .header-banner {
+        min-height: 200px; /* تقليل ارتفاع الراية */
+    }
+
+    .nav-bar {
+        padding: 10px 10px;
+    }
+    
+    .nav-links {
+        /* إخفاء روابط التنقل الفرعية لإعطاء مساحة */
+        display: none; 
+    }
+
+    .main-content {
+        right: 10px;
+        top: 60%; /* تعديل موقع العنوان للأسفل قليلاً */
+        transform: none;
+    }
+    
+    .title-large {
+        font-size: 1.8em; /* تقليل حجم العنوان الرئيسي ليتناسب مع الهاتف */
+    }
+
+    .event-chooser, .choose-mode-btn {
+        font-size: 14px;
+        padding: 8px 15px;
+        margin-top: 10px;
+    }
+
+    .recommended-section {
+        padding: 15px 10px;
+    }
+
+    .cards-container {
+        /* للحفاظ على عرض البطاقات جنباً إلى جنب مع إمكانية السحب الأفقي */
+        flex-wrap: nowrap; 
+    }
+
+    .card {
+        min-width: 80vw; /* جعل البطاقة تأخذ 80% من عرض الشاشة لترك مساحة لبطاقة أخرى تظهر جزئياً */
+    }
+}
